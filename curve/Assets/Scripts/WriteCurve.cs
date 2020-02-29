@@ -8,8 +8,11 @@ public class WriteCurve : MonoBehaviour
     public GameObject pointPrefab;
     public GameObject points;
 
-    [SerializeField]
-    private Material _material;
+    [SerializeField] private int longitude = 200;
+    [SerializeField] private int meridian = 20;
+    [SerializeField] private float radius = 0.05f;
+
+    [SerializeField] private Material _material;
     private Mesh _mesh;
 
     void Awake()
@@ -20,23 +23,17 @@ public class WriteCurve : MonoBehaviour
 
     void Write()
     {
-        float r1 = 3.0f;
-        float r2 = 1.0f;
-        int longitude = 200;
-        int meridian = 20;
-        float radius = 0.05f;
-
         _mesh = new Mesh();
 
         var vertices = new List<Vector3>();
         var triangles = new List<int>();
         var normals = new List<Vector3>();
 
-        for (int i = 0; i < longitude; i++)
+        for (int i = 0; i <= longitude; i++)
         {
             float t = (float)i / longitude;
             Vector3 centralPoint = Curve(t);
-            for (int j = 0; j < meridian; j++)
+            for (int j = 0; j <= meridian; j++)
             {
                 float s = (float)j / meridian;
                 Vector3 normal = Normal(t, s);
@@ -45,18 +42,17 @@ public class WriteCurve : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < longitude-2; i++)
+        for (int i = 0; i < longitude; i++)
         {
-            for (int j = 0; j < meridian-2; j++)
+            for (int j = 0; j < meridian; j++)
             {
-                var count = meridian * i + j;
-                triangles.Add(count);
-                triangles.Add(count + meridian + 2);
-                triangles.Add(count + 1);
+                triangles.Add(GetIndex(i, j));
+                triangles.Add(GetIndex(i+1, j+1));
+                triangles.Add(GetIndex(i, j+1));
 
-                triangles.Add(count);
-                triangles.Add(count + meridian + 1);
-                triangles.Add(count + meridian + 2);
+                triangles.Add(GetIndex(i, j));
+                triangles.Add(GetIndex(i+1, j));
+                triangles.Add(GetIndex(i+1, j+1));
             }
         }
 
@@ -67,10 +63,13 @@ public class WriteCurve : MonoBehaviour
         _mesh.RecalculateBounds();
     }
 
+    int GetIndex(int i, int j)
+    {
+        return (meridian + 1) * i + j;
+    }
+
     void WriteForDebug()
     {
-        int longitude = 20;
-        int meridian = 20;
         for (int i = 0; i < longitude; i++)
         {
             float t0 = (float)i / longitude;
@@ -89,7 +88,7 @@ public class WriteCurve : MonoBehaviour
 
     void WritePoint(Vector3 p)
     {
-        float pointSize = 0.1f;
+        float pointSize = 0.03f;
         GameObject g = Instantiate(pointPrefab, points.transform);
         g.transform.position = p;
         g.transform.localScale = new Vector3(pointSize, pointSize, pointSize);
@@ -98,7 +97,7 @@ public class WriteCurve : MonoBehaviour
     void WriteLine(Vector3 start, Vector3 end)
     {
         // https://qiita.com/7of9/items/3750d30590e3efcfd389
-        float width = 0.02f;
+        float width = 0.01f;
         GameObject line = new GameObject("Line");
         LineRenderer renderer = line.AddComponent<LineRenderer>();
         renderer.SetVertexCount(2);
@@ -109,17 +108,13 @@ public class WriteCurve : MonoBehaviour
 
     void WriteVector(Vector3 start, Vector3 vector)
     {
-        float length = 0.2f;
+        float length = 2 * radius;
         WriteLine(start, start + length * vector);
     }
 
     Vector3 Curve(float t)
     {
         // https://en.wikipedia.org/wiki/Trefoil_knot
-        if (t < 0 || t > 1)
-        {
-            throw new System.Exception();
-        };
         float theta = 2 * Mathf.PI * t;
         float r = 0.5f;
         float x = r * (Mathf.Sin(theta) + 2 * Mathf.Sin(2 * theta));
