@@ -152,6 +152,9 @@ MonoBehaviour:
   pointPrefab: {fileID: 7653275294283824305, guid: 7a4584e3f7db4e049a324cac21bb1a7d,
     type: 3}
   points: {fileID: 1635907174}
+  longitude: 200
+  meridian: 20
+  radius: 0.05
   _material: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!4 &518968171
 Transform:

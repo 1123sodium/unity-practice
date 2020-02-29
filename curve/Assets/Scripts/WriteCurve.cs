@@ -35,6 +35,8 @@ public class WriteCurve : MonoBehaviour
 
     Vector3 Curve(float t)
     {
+        // 0 <= t <= 1 + epsilon
+        // 微分の計算をする都合で、1より少しだけ大きな値も入ってくる (回避できるけど、その必要ある？)
         // https://en.wikipedia.org/wiki/Trefoil_knot
         float theta = 2 * Mathf.PI * t;
         float r = 0.5f;
@@ -46,14 +48,14 @@ public class WriteCurve : MonoBehaviour
 
     Vector3 Tangent(float t)
     {
-        float dt = 0.001f;
+        float dt = 0.1f / longitude;
         Vector3 tangent = Curve(t + dt) - Curve(t);
         return tangent.normalized;
     }
 
     Vector3 PrincipalNormal(float t)
     {
-        float dt = 0.001f;
+        float dt = 0.1f / longitude;
         Vector3 normal = Tangent(t + dt) - Tangent(t);
         return normal.normalized;
     }
