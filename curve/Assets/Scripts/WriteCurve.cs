@@ -14,9 +14,17 @@ public class WriteCurve : MonoBehaviour
 
     void Awake()
     {
-        var r1 = 3.0f;
-        var r2 = 1.0f;
-        var n = 20;
+        Write();
+        //WriteForDebug();
+    }
+
+    void Write()
+    {
+        float r1 = 3.0f;
+        float r2 = 1.0f;
+        int longitude = 40;
+        int meridian = 20;
+        float radius = 0.02f;
 
         _mesh = new Mesh();
 
@@ -24,49 +32,42 @@ public class WriteCurve : MonoBehaviour
         var triangles = new List<int>();
         var normals = new List<Vector3>();
 
-        for (int i = 0; i <= n; i++)
+        for (int i = 0; i < longitude; i++)
         {
-            var phi = Mathf.PI * 2.0f * i / n;
-            var tr = Mathf.Cos(phi) * r2;
-            var y = Mathf.Sin(phi) * r2;
-
-            for (int j = 0; j <= n; j++)
+            float t = (float)i / longitude;
+            Vector3 centralPoint = Curve(t);
+            for (int j = 0; j < meridian; j++)
             {
-                var theta = 2.0f * Mathf.PI * j / n;
-                var x = Mathf.Cos(theta) * (r1 + tr);
-                var z = Mathf.Sin(theta) * (r1 + tr);
-
-                vertices.Add(new Vector3(x, y, z));
-                normals.Add(new Vector3(tr * Mathf.Cos(theta), y, tr * Mathf.Sin(theta)));
+                float s = (float)j / meridian;
+                Vector3 normal = Normal(t, s);
+                vertices.Add(centralPoint + radius * normal);
+                normals.Add(normal);
             }
         }
 
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < longitude-2; i++)
         {
-            for (int j = 0; j < n; j++)
+            for (int j = 0; j < meridian-2; j++)
             {
-                var count = (n + 1) * j + i;
+                var count = meridian * i + j;
                 triangles.Add(count);
-                triangles.Add(count + n + 2);
+                triangles.Add(count + meridian + 2);
                 triangles.Add(count + 1);
 
                 triangles.Add(count);
-                triangles.Add(count + n + 1);
-                triangles.Add(count + n + 2);
+                triangles.Add(count + meridian + 1);
+                triangles.Add(count + meridian + 2);
             }
         }
 
-        // _mesh.vertices = vertices.ToArray();
-        // _mesh.triangles = triangles.ToArray();
-        // _mesh.normals = normals.ToArray();
+        _mesh.vertices = vertices.ToArray();
+        _mesh.triangles = triangles.ToArray();
+        _mesh.normals = normals.ToArray();
 
-        // _mesh.RecalculateBounds();
-
-        Test();
-        
+        _mesh.RecalculateBounds();
     }
 
-    void Test()
+    void WriteForDebug()
     {
         int longitude = 20;
         int meridian = 20;
