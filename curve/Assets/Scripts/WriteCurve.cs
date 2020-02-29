@@ -21,6 +21,61 @@ public class WriteCurve : MonoBehaviour
         //WriteForDebug();
     }
 
+    // Start is called before the first frame update
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        Graphics.DrawMesh(_mesh, Vector3.zero, Quaternion.identity, _material, 0);
+    }
+
+    Vector3 Curve(float t)
+    {
+        // https://en.wikipedia.org/wiki/Trefoil_knot
+        float theta = 2 * Mathf.PI * t;
+        float r = 0.5f;
+        float x = r * (Mathf.Sin(theta) + 2 * Mathf.Sin(2 * theta));
+        float y = r * (Mathf.Cos(theta) - 2 * Mathf.Cos(2 * theta));
+        float z = -r * Mathf.Sin(3 * theta);
+        return new Vector3(x, y, z);
+    }
+
+    Vector3 Tangent(float t)
+    {
+        float dt = 0.001f;
+        Vector3 tangent = Curve(t + dt) - Curve(t);
+        return tangent.normalized;
+    }
+
+    Vector3 PrincipalNormal(float t)
+    {
+        float dt = 0.001f;
+        Vector3 normal = Tangent(t + dt) - Tangent(t);
+        return normal.normalized;
+    }
+
+    Vector3 Binormal(float t)
+    {
+        Vector3 binormal = Vector3.Cross(Tangent(t), PrincipalNormal(t));
+        return binormal.normalized;  // 正規化いる？
+    }
+
+    Vector3 Normal(float t, float s)
+    {
+        if (s < 0 || s > 1)
+        {
+            throw new System.Exception();
+        }
+        float theta = 2 * Mathf.PI * s;
+        float x = Mathf.Cos(theta);
+        float y = Mathf.Sin(theta);
+        return x * PrincipalNormal(t) + y * Binormal(t);
+    }
+
     void Write()
     {
         _mesh = new Mesh();
@@ -68,6 +123,9 @@ public class WriteCurve : MonoBehaviour
         return (meridian + 1) * i + j;
     }
 
+    /// <summary>
+    /// ここから下はデバッグ用に作ったもの(なので曲線の描画そのものには関係ない)
+    /// </summary>
     void WriteForDebug()
     {
         for (int i = 0; i < longitude; i++)
@@ -110,60 +168,5 @@ public class WriteCurve : MonoBehaviour
     {
         float length = 2 * radius;
         WriteLine(start, start + length * vector);
-    }
-
-    Vector3 Curve(float t)
-    {
-        // https://en.wikipedia.org/wiki/Trefoil_knot
-        float theta = 2 * Mathf.PI * t;
-        float r = 0.5f;
-        float x = r * (Mathf.Sin(theta) + 2 * Mathf.Sin(2 * theta));
-        float y = r * (Mathf.Cos(theta) - 2 * Mathf.Cos(2 * theta));
-        float z = -r * Mathf.Sin(3 * theta);
-        return new Vector3(x, y, z);
-    }
-
-    Vector3 Tangent(float t)
-    {
-        float dt = 0.001f;
-        Vector3 tangent = Curve(t + dt) - Curve(t);
-        return tangent.normalized;
-    }
-
-    Vector3 PrincipalNormal(float t)
-    {
-        float dt = 0.001f;
-        Vector3 normal = Tangent(t + dt) - Tangent(t);
-        return normal.normalized;
-    }
-
-    Vector3 Binormal(float t)
-    {
-        Vector3 binormal = Vector3.Cross(Tangent(t), PrincipalNormal(t));
-        return binormal.normalized;  // 正規化いる？
-    }
-
-    Vector3 Normal(float t, float s)
-    {
-        if (s < 0 || s > 1)
-        {
-            throw new System.Exception();
-        }
-        float theta = 2 * Mathf.PI * s;
-        float x = Mathf.Cos(theta);
-        float y = Mathf.Sin(theta);
-        return x * PrincipalNormal(t) + y * Binormal(t);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        Graphics.DrawMesh(_mesh, Vector3.zero, Quaternion.identity, _material, 0);
     }
 }
