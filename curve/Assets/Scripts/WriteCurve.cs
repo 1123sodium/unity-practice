@@ -22,9 +22,9 @@ public class WriteCurve : MonoBehaviour
     {
         float r1 = 3.0f;
         float r2 = 1.0f;
-        int longitude = 40;
+        int longitude = 200;
         int meridian = 20;
-        float radius = 0.02f;
+        float radius = 0.05f;
 
         _mesh = new Mesh();
 
@@ -115,15 +115,16 @@ public class WriteCurve : MonoBehaviour
 
     Vector3 Curve(float t)
     {
+        // https://en.wikipedia.org/wiki/Trefoil_knot
         if (t < 0 || t > 1)
         {
             throw new System.Exception();
         };
-        float theta = Mathf.PI * t;
-        float r = 1.0f;
-        float x = Mathf.Cos(theta) * r;
-        float y = Mathf.Sin(theta) * r;
-        float z = 0.5f * r * t;
+        float theta = 2 * Mathf.PI * t;
+        float r = 0.5f;
+        float x = r * (Mathf.Sin(theta) + 2 * Mathf.Sin(2 * theta));
+        float y = r * (Mathf.Cos(theta) - 2 * Mathf.Cos(2 * theta));
+        float z = -r * Mathf.Sin(3 * theta);
         return new Vector3(x, y, z);
     }
 
