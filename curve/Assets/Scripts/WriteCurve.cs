@@ -62,17 +62,27 @@ public class WriteCurve : MonoBehaviour
 
         // _mesh.RecalculateBounds();
 
-        // curve
-        int segments = 20;
-        for (int i=0; i<segments; i++)
+        Test();
+        
+    }
+
+    void Test()
+    {
+        int longitude = 20;
+        int meridian = 20;
+        for (int i = 0; i < longitude; i++)
         {
-            float t0 = (float)i / segments;
-            float t1 = (float)(i + 1) / segments;
+            float t0 = (float)i / longitude;
+            float t1 = (float)(i + 1) / longitude;
             WritePoint(Curve(t0));
             //WriteLine(Curve(t0), Curve(t1));
             //WriteLine(Curve(t0), Curve(t0) + Tangent(t0));
-            WriteVector(Curve(t0), Normal(t0));
-            WriteVector(Curve(t0), Binormal(t0));
+            //WriteVector(Curve(t0), PrincipalNormal(t0));
+            //WriteVector(Curve(t0), Binormal(t0));
+            for (int j = 0; j < meridian; j++)
+            {
+                WriteVector(Curve(t0), Normal(t0, (float)j / meridian));
+            }
         }
     }
 
@@ -123,7 +133,7 @@ public class WriteCurve : MonoBehaviour
         return tangent.normalized;
     }
 
-    Vector3 Normal(float t)
+    Vector3 PrincipalNormal(float t)
     {
         float dt = 0.001f;
         Vector3 normal = Tangent(t + dt) - Tangent(t);
@@ -132,8 +142,20 @@ public class WriteCurve : MonoBehaviour
 
     Vector3 Binormal(float t)
     {
-        Vector3 binormal = Vector3.Cross(Tangent(t), Normal(t));
+        Vector3 binormal = Vector3.Cross(Tangent(t), PrincipalNormal(t));
         return binormal.normalized;  // 正規化いる？
+    }
+
+    Vector3 Normal(float t, float s)
+    {
+        if (s < 0 || s > 1)
+        {
+            throw new System.Exception();
+        }
+        float theta = 2 * Mathf.PI * s;
+        float x = Mathf.Cos(theta);
+        float y = Mathf.Sin(theta);
+        return x * PrincipalNormal(t) + y * Binormal(t);
     }
 
     // Start is called before the first frame update
