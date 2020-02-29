@@ -64,13 +64,42 @@ public class WriteCurve : MonoBehaviour
 
         // curve
         int segments = 20;
-        float pointSize = 0.1f;
         for (int i=0; i<segments; i++)
         {
-            GameObject g = Instantiate(pointPrefab, points.transform);
-            g.transform.position = Curve((float)i / n);
-            g.transform.localScale = new Vector3(pointSize, pointSize, pointSize);
+            float t0 = (float)i / segments;
+            float t1 = (float)(i + 1) / segments;
+            WritePoint(Curve(t0));
+            //WriteLine(Curve(t0), Curve(t1));
+            //WriteLine(Curve(t0), Curve(t0) + Tangent(t0));
+            WriteVector(Curve(t0), Normal(t0));
+            WriteVector(Curve(t0), Binormal(t0));
         }
+    }
+
+    void WritePoint(Vector3 p)
+    {
+        float pointSize = 0.1f;
+        GameObject g = Instantiate(pointPrefab, points.transform);
+        g.transform.position = p;
+        g.transform.localScale = new Vector3(pointSize, pointSize, pointSize);
+    }
+
+    void WriteLine(Vector3 start, Vector3 end)
+    {
+        // https://qiita.com/7of9/items/3750d30590e3efcfd389
+        float width = 0.02f;
+        GameObject line = new GameObject("Line");
+        LineRenderer renderer = line.AddComponent<LineRenderer>();
+        renderer.SetVertexCount(2);
+        renderer.SetWidth(width, width);
+        renderer.SetPosition(0, start);
+        renderer.SetPosition(1, end);
+    }
+
+    void WriteVector(Vector3 start, Vector3 vector)
+    {
+        float length = 0.2f;
+        WriteLine(start, start + length * vector);
     }
 
     Vector3 Curve(float t)
@@ -83,8 +112,28 @@ public class WriteCurve : MonoBehaviour
         float r = 1.0f;
         float x = Mathf.Cos(theta) * r;
         float y = Mathf.Sin(theta) * r;
-        float z = 0f;
+        float z = 0.5f * r * t;
         return new Vector3(x, y, z);
+    }
+
+    Vector3 Tangent(float t)
+    {
+        float dt = 0.001f;
+        Vector3 tangent = Curve(t + dt) - Curve(t);
+        return tangent.normalized;
+    }
+
+    Vector3 Normal(float t)
+    {
+        float dt = 0.001f;
+        Vector3 normal = Tangent(t + dt) - Tangent(t);
+        return normal.normalized;
+    }
+
+    Vector3 Binormal(float t)
+    {
+        Vector3 binormal = Vector3.Cross(Tangent(t), Normal(t));
+        return binormal.normalized;  // 正規化いる？
     }
 
     // Start is called before the first frame update
