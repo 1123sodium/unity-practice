@@ -30,9 +30,9 @@ public class WriteCurve : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.LeftArrow)) {
+        if (Input.GetKey(KeyCode.LeftArrow) || OVRInput.Get(OVRInput.RawButton.A)) {
             transform.position += transform.forward * 0.1f;
-        } else if (Input.GetKey(KeyCode.RightArrow)) {
+        } else if (Input.GetKey(KeyCode.RightArrow) || OVRInput.Get(OVRInput.RawButton.B)) {
             transform.position -= transform.forward * 0.1f;
         }
         Graphics.DrawMesh(_mesh, transform.position, Quaternion.identity, _material, 0);
