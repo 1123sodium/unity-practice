@@ -104,12 +104,12 @@ public class WriteCurve : MonoBehaviour
             for (int j = 0; j < meridian; j++)
             {
                 triangles.Add(GetIndex(i, j));
-                triangles.Add(GetIndex(i+1, j+1));
                 triangles.Add(GetIndex(i, j+1));
+                triangles.Add(GetIndex(i+1, j+1));
 
                 triangles.Add(GetIndex(i, j));
-                triangles.Add(GetIndex(i+1, j));
                 triangles.Add(GetIndex(i+1, j+1));
+                triangles.Add(GetIndex(i+1, j));
             }
         }
 
