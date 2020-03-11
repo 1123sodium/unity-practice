@@ -30,7 +30,12 @@ public class WriteCurve : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Graphics.DrawMesh(_mesh, Vector3.zero, Quaternion.identity, _material, 0);
+        if (Input.GetKey(KeyCode.LeftArrow)) {
+            transform.position += transform.forward * 0.1f;
+        } else if (Input.GetKey(KeyCode.RightArrow)) {
+            transform.position -= transform.forward * 0.1f;
+        }
+        Graphics.DrawMesh(_mesh, transform.position, Quaternion.identity, _material, 0);
     }
 
     Vector3 Curve(float t)
