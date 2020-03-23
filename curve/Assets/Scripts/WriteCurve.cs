@@ -8,15 +8,17 @@ public class WriteCurve // : MonoBehaviour
     private int longitude = 200;
     private int meridian = 20;
     private float radius = 0.05f;
+    private float scale;
 
     private Material _material;
     private Mesh _mesh;
 
     private Vector3 position = new Vector3(0, 0, 0);
 
-    public WriteCurve(Material material)
+    public WriteCurve(Material material, float scale = 1.0f)
     {
-        _material = material;
+        this._material = material;
+        this.scale = scale;
         this.Write();
     }
     
@@ -65,7 +67,7 @@ public class WriteCurve // : MonoBehaviour
         float x = r * (Mathf.Sin(theta) + 2 * Mathf.Sin(2 * theta));
         float y = r * (Mathf.Cos(theta) - 2 * Mathf.Cos(2 * theta));
         float z = -r * Mathf.Sin(3 * theta);
-        return new Vector3(x, y, z);
+        return new Vector3(x, y, z) * this.scale;
     }
 
     Vector3 Tangent(float t)
