@@ -17,8 +17,10 @@ public class WriteCurve // : MonoBehaviour
     public WriteCurve(Material material)
     {
         _material = material;
+        this.Write();
     }
     
+    /*
     public void Awake()
     {
         Write();
@@ -34,16 +36,23 @@ public class WriteCurve // : MonoBehaviour
     // Update is called once per frame
     public void Update()
     {
-        MyController controller = new MyController();
-        if (controller.GetKey(KeyCode.LeftArrow) || controller.GetAButton() || controller.GetXButton()) {
-            position += new Vector3(0, 0, 0.1f);
-        } else if (controller.GetKey(KeyCode.RightArrow) || controller.GetBButton() || controller.GetYButton()) {
-            position -= new Vector3(0, 0, 0.1f);
-        }
-        Vector2 lStick = controller.GetLStick();
-        position += new Vector3(lStick.x, lStick.y, 0) * 0.1f;
-        // transform.position = controller.GetRControllerPosition();
-        Graphics.DrawMesh(_mesh, position, Quaternion.identity, _material, 0);
+        
+    }
+    */
+
+    public void DrawMesh()
+    {
+        Graphics.DrawMesh(this._mesh, this.position, Quaternion.identity, this._material, 0);
+    }
+
+    public void MovePosition(Vector3 velocity)
+    {
+        this.position += velocity;
+    }
+
+    public void SetPosition(Vector3 position)
+    {
+        this.position = position;
     }
 
     Vector3 Curve(float t)
