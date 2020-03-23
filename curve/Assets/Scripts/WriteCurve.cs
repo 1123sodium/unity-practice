@@ -11,6 +11,8 @@ public class WriteCurve : MonoBehaviour
 
     [SerializeField] private Material _material;
     private Mesh _mesh;
+
+    private Vector3 position = new Vector3(0, 0, 0);
     
     void Awake()
     {
@@ -29,14 +31,14 @@ public class WriteCurve : MonoBehaviour
     {
         MyController controller = new MyController();
         if (controller.GetKey(KeyCode.LeftArrow) || controller.GetAButton() || controller.GetXButton()) {
-            transform.position += transform.forward * 0.1f;
+            position += new Vector3(0, 0, 0.1f);
         } else if (controller.GetKey(KeyCode.RightArrow) || controller.GetBButton() || controller.GetYButton()) {
-            transform.position -= transform.forward * 0.1f;
+            position -= new Vector3(0, 0, 0.1f);
         }
         Vector2 lStick = controller.GetLStick();
-        transform.position += new Vector3(lStick.x, lStick.y, 0) * 0.1f;
+        position += new Vector3(lStick.x, lStick.y, 0) * 0.1f;
         // transform.position = controller.GetRControllerPosition();
-        Graphics.DrawMesh(_mesh, transform.position, Quaternion.identity, _material, 0);
+        Graphics.DrawMesh(_mesh, position, Quaternion.identity, _material, 0);
     }
 
     Vector3 Curve(float t)
