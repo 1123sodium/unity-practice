@@ -3,18 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WriteCurve : MonoBehaviour
+public class WriteCurve // : MonoBehaviour
 {
-    [SerializeField] private int longitude = 200;
-    [SerializeField] private int meridian = 20;
-    [SerializeField] private float radius = 0.05f;
+    private int longitude = 200;
+    private int meridian = 20;
+    private float radius = 0.05f;
 
-    [SerializeField] private Material _material;
+    private Material _material;
     private Mesh _mesh;
 
     private Vector3 position = new Vector3(0, 0, 0);
+
+    public WriteCurve(Material material)
+    {
+        _material = material;
+    }
     
-    void Awake()
+    public void Awake()
     {
         Write();
         //WriteForDebug();
@@ -27,7 +32,7 @@ public class WriteCurve : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         MyController controller = new MyController();
         if (controller.GetKey(KeyCode.LeftArrow) || controller.GetAButton() || controller.GetXButton()) {
