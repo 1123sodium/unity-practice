@@ -35,6 +35,7 @@ public class Main : MonoBehaviour
         this.curve.DrawMesh();
 
         // curveAtController
+        this.controller.UpdateRStickPosition();
         this.curveAtController.SetPosition(this.controller.GetRControllerPosition());
         this.curveAtController.DrawMesh();
     }
