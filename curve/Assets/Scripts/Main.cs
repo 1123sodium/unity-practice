@@ -14,6 +14,7 @@ public class Main : MonoBehaviour
     void Start()
     {
         Debug.Log("Start!!!");
+        this.SetCameraPosition();
         this.controller = new MyController();
         this.curve = new WriteCurve(this._material);
         this.curveAtController = new WriteCurve(this._material, 0.3f);
@@ -38,5 +39,14 @@ public class Main : MonoBehaviour
         this.controller.UpdateRStickPosition();
         this.curveAtController.SetPosition(this.controller.GetRControllerPosition());
         this.curveAtController.DrawMesh();
+    }
+
+    void SetCameraPosition()
+    {
+        GameObject camera = GameObject.Find("OVRCameraRig");
+        Debug.Log(camera.ToString());
+        Vector3 cameraPosition = new Vector3(0, 0, -2);
+        camera.transform.position = cameraPosition;
+        camera.transform.forward = -cameraPosition;
     }
 }
