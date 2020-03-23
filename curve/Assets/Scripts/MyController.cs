@@ -4,6 +4,19 @@ using UnityEngine;
 
 public class MyController
 {
+
+    private GameObject rController;
+
+    public MyController()
+    {
+        rController = GameObject.Find("RightHandAnchor");
+    }
+
+    public Vector3 GetRControllerPosition()
+    {
+        return rController.GetComponent<Transform>().position;
+    }
+
     public bool GetKey(KeyCode keyCode)
     {
         return Input.GetKey(keyCode);
