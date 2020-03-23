@@ -36,6 +36,8 @@ public class WriteCurve : MonoBehaviour
         } else if (controller.GetKey(KeyCode.RightArrow) || controller.GetBButton() || controller.GetYButton()) {
             transform.position -= transform.forward * 0.1f;
         }
+        Vector2 lStick = controller.GetLStick();
+        transform.position += new Vector3(lStick.x, lStick.y, 0) * 0.1f;
         Graphics.DrawMesh(_mesh, transform.position, Quaternion.identity, _material, 0);
     }
 
