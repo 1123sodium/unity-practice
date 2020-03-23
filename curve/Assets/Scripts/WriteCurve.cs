@@ -35,7 +35,7 @@ public class WriteCurve : MonoBehaviour
         }
         Vector2 lStick = controller.GetLStick();
         transform.position += new Vector3(lStick.x, lStick.y, 0) * 0.1f;
-        transform.position = controller.GetRControllerPosition();
+        // transform.position = controller.GetRControllerPosition();
         Graphics.DrawMesh(_mesh, transform.position, Quaternion.identity, _material, 0);
     }
 
