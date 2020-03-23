@@ -15,6 +15,8 @@ public class WriteCurve : MonoBehaviour
     [SerializeField] private Material _material;
     private Mesh _mesh;
 
+    private GameObject rController;
+
     void Awake()
     {
         Write();
@@ -24,7 +26,7 @@ public class WriteCurve : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        rController = GameObject.Find("RightHandAnchor");
     }
 
     // Update is called once per frame
@@ -38,6 +40,7 @@ public class WriteCurve : MonoBehaviour
         }
         Vector2 lStick = controller.GetLStick();
         transform.position += new Vector3(lStick.x, lStick.y, 0) * 0.1f;
+        transform.position = rController.GetComponent<Transform>().position;
         Graphics.DrawMesh(_mesh, transform.position, Quaternion.identity, _material, 0);
     }
 
