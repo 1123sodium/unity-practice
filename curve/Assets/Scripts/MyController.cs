@@ -25,21 +25,74 @@ namespace MyUtil
         );
     }
 
+    public class StickEmulator
+    {
+        public KeyCode up;
+        public KeyCode down;
+        public KeyCode left;
+        public KeyCode right;
+
+        public StickEmulator(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
+        {
+            this.up = up;
+            this.down = down;
+            this.left = left;
+            this.right = right;
+        }
+
+        public static StickEmulator defaultValue = new StickEmulator(
+            up: KeyCode.UpArrow, down: KeyCode.DownArrow,
+            left: KeyCode.LeftArrow, right: KeyCode.RightArrow
+        );
+
+        public Vector2 ToVector2()
+        {
+            Vector2 direction = new Vector2(0, 0);
+            if (Input.GetKey(this.up))
+            {
+                direction += new Vector2(0, 1);
+            }
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                direction += new Vector2(0, -1);
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                direction += new Vector2(1, 0);
+            }
+            if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                direction += new Vector2(-1, 0);
+            }
+            return direction;
+        }
+    }
+
     
     public class MyController
     {
         private GameObject rController;
         private ButtonMap buttonMap;
+        private StickEmulator rStickEmulator;
 
-        public MyController(ButtonMap buttonMap = null)
+        public MyController(ButtonMap buttonMap = null, StickEmulator rStickEmulator = null)
         {
             rController = GameObject.Find("RightHandAnchor");
             if (buttonMap != null)
             {
                 this.buttonMap = buttonMap;
-            } else
+            } 
+            else
             {
                 this.buttonMap = ButtonMap.defaultValue;
+            }
+            if (rStickEmulator != null)
+            {
+                this.rStickEmulator = rStickEmulator;
+            }
+            else
+            {
+                this.rStickEmulator = StickEmulator.defaultValue;
             }
         }
 
@@ -48,57 +101,37 @@ namespace MyUtil
             return rController.GetComponent<Transform>().position;
         }
 
+        /*
         public bool GetKey(KeyCode keyCode)
         {
             return Input.GetKey(keyCode);
         }
+        */
 
         public bool GetAButton()
         {
-            return OVRInput.Get(OVRInput.RawButton.A) || GetKey(this.buttonMap.a);
+            return OVRInput.Get(OVRInput.RawButton.A) || Input.GetKey(this.buttonMap.a);
         }
 
         public bool GetBButton()
         {
-            return OVRInput.Get(OVRInput.RawButton.B) || GetKey(this.buttonMap.b);
+            return OVRInput.Get(OVRInput.RawButton.B) || Input.GetKey(this.buttonMap.b);
         }
 
         public bool GetXButton()
         {
-            return OVRInput.Get(OVRInput.RawButton.X) || GetKey(this.buttonMap.x);
+            return OVRInput.Get(OVRInput.RawButton.X) || Input.GetKey(this.buttonMap.x);
         }
 
         public bool GetYButton()
         {
-            return OVRInput.Get(OVRInput.RawButton.Y) || GetKey(this.buttonMap.y);
+            return OVRInput.Get(OVRInput.RawButton.Y) || Input.GetKey(this.buttonMap.y);
         }
 
-        public Vector2 GetLStick()
+        public Vector2 GetRStick()
         {
-            Vector2 ovrStick = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick);
-            return ovrStick + GetCursor();
-        }
-
-        public Vector2 GetCursor()
-        {
-            Vector2 cursor = new Vector2(0, 0);
-            if (GetKey(KeyCode.UpArrow))
-            {
-                cursor += new Vector2(0, 1);
-            }
-            if (GetKey(KeyCode.DownArrow))
-            {
-                cursor += new Vector2(0, -1);
-            }
-            if (GetKey(KeyCode.RightArrow))
-            {
-                cursor += new Vector2(1, 0);
-            }
-            if (GetKey(KeyCode.LeftArrow))
-            {
-                cursor += new Vector2(-1, 0);
-            }
-            return cursor;
+            Vector2 ovrStick = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick);
+            return ovrStick + this.rStickEmulator.ToVector2();
         }
     }
 

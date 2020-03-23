@@ -20,16 +20,16 @@ public class Main : MonoBehaviour
     void Update()
     {
         MyController controller = new MyController();
-        if (controller.GetKey(KeyCode.LeftArrow) || controller.GetAButton() || controller.GetXButton())
+        if (controller.GetAButton() || controller.GetXButton())
         {
             this.curve.MovePosition(new Vector3(0, 0, 0.1f));
         }
-        else if (controller.GetKey(KeyCode.RightArrow) || controller.GetBButton() || controller.GetYButton())
+        else if (controller.GetBButton() || controller.GetYButton())
         {
             this.curve.MovePosition(new Vector3(0, 0, -0.1f));
         }
-        Vector2 lStick = controller.GetLStick();
-        this.curve.MovePosition(new Vector3(lStick.x, lStick.y, 0) * 0.1f);
+        Vector2 rStick = controller.GetRStick();
+        this.curve.MovePosition(new Vector3(rStick.x, rStick.y, 0) * 0.1f);
         this.curve.DrawMesh();
 
         // curveAtController
