@@ -98,7 +98,15 @@ namespace MyUtil
 
         public Vector3 GetRControllerPosition()
         {
-            return rController.GetComponent<Transform>().position;
+            if (OVRPlugin.productName != null)
+            {
+                return rController.GetComponent<Transform>().position;
+            }
+            else
+            {
+                return new Vector3(0, 0, 0);
+            }
+            
         }
 
         /*

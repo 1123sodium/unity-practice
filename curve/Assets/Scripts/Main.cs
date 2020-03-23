@@ -6,12 +6,15 @@ using MyUtil;
 public class Main : MonoBehaviour
 {
     [SerializeField] Material _material;
+    private MyController controller;
     private WriteCurve curve;
     private WriteCurve curveAtController;
 
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Start!!!");
+        this.controller = new MyController();
         this.curve = new WriteCurve(this._material);
         this.curveAtController = new WriteCurve(this._material, 0.3f);
     }
@@ -19,21 +22,20 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MyController controller = new MyController();
-        if (controller.GetAButton() || controller.GetXButton())
+        if (this.controller.GetAButton() || this.controller.GetXButton())
         {
             this.curve.MovePosition(new Vector3(0, 0, 0.1f));
         }
-        else if (controller.GetBButton() || controller.GetYButton())
+        else if (this.controller.GetBButton() || this.controller.GetYButton())
         {
             this.curve.MovePosition(new Vector3(0, 0, -0.1f));
         }
-        Vector2 rStick = controller.GetRStick();
+        Vector2 rStick = this.controller.GetRStick();
         this.curve.MovePosition(new Vector3(rStick.x, rStick.y, 0) * 0.1f);
         this.curve.DrawMesh();
 
         // curveAtController
-        this.curveAtController.SetPosition(controller.GetRControllerPosition());
+        this.curveAtController.SetPosition(this.controller.GetRControllerPosition());
         this.curveAtController.DrawMesh();
     }
 }
