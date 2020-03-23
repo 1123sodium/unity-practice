@@ -25,14 +25,14 @@ namespace MyUtil
         );
     }
 
-    public class StickEmulator
+    public class StickMap
     {
         public KeyCode up;
         public KeyCode down;
         public KeyCode left;
         public KeyCode right;
 
-        public StickEmulator(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
+        public StickMap(KeyCode up, KeyCode down, KeyCode left, KeyCode right)
         {
             this.up = up;
             this.down = down;
@@ -40,7 +40,7 @@ namespace MyUtil
             this.right = right;
         }
 
-        public static StickEmulator defaultValue = new StickEmulator(
+        public static StickMap defaultValue = new StickMap(
             up: KeyCode.UpArrow, down: KeyCode.DownArrow,
             left: KeyCode.LeftArrow, right: KeyCode.RightArrow
         );
@@ -73,9 +73,9 @@ namespace MyUtil
     {
         private GameObject rController;
         private ButtonMap buttonMap;
-        private StickEmulator rStickEmulator;
+        private StickMap rStickMap;
 
-        public MyController(ButtonMap buttonMap = null, StickEmulator rStickEmulator = null)
+        public MyController(ButtonMap buttonMap = null, StickMap rStickMap = null)
         {
             rController = GameObject.Find("RightHandAnchor");
             if (buttonMap != null)
@@ -86,13 +86,13 @@ namespace MyUtil
             {
                 this.buttonMap = ButtonMap.defaultValue;
             }
-            if (rStickEmulator != null)
+            if (rStickMap != null)
             {
-                this.rStickEmulator = rStickEmulator;
+                this.rStickMap = rStickMap;
             }
             else
             {
-                this.rStickEmulator = StickEmulator.defaultValue;
+                this.rStickMap = StickMap.defaultValue;
             }
         }
 
@@ -139,7 +139,7 @@ namespace MyUtil
         public Vector2 GetRStick()
         {
             Vector2 ovrStick = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick);
-            return ovrStick + this.rStickEmulator.ToVector2();
+            return ovrStick + this.rStickMap.ToVector2();
         }
     }
 
