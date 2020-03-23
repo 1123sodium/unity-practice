@@ -2,71 +2,92 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MyController
+namespace MyUtil
 {
+    using ButtonMap = Dictionary<OVRInput.RawButton, KeyCode>;
 
-    private GameObject rController;
-
-    public MyController()
+    
+    public class MyController
     {
-        rController = GameObject.Find("RightHandAnchor");
-    }
+        private GameObject rController;
+        private ButtonMap buttonMap;
 
-    public Vector3 GetRControllerPosition()
-    {
-        return rController.GetComponent<Transform>().position;
-    }
+        public static ButtonMap defaultButtonMap = new ButtonMap() {
+            { OVRInput.RawButton.A, KeyCode.A },
+            { OVRInput.RawButton.B, KeyCode.B },
+            { OVRInput.RawButton.X, KeyCode.X },
+            { OVRInput.RawButton.Y, KeyCode.Y }
+        };
 
-    public bool GetKey(KeyCode keyCode)
-    {
-        return Input.GetKey(keyCode);
-    }
-
-    public bool GetAButton()
-    {
-        return OVRInput.Get(OVRInput.RawButton.A) || GetKey(KeyCode.A);
-    }
-
-    public bool GetBButton()
-    {
-        return OVRInput.Get(OVRInput.RawButton.B) || GetKey(KeyCode.B);
-    }
-
-    public bool GetXButton()
-    {
-        return OVRInput.Get(OVRInput.RawButton.X) || GetKey(KeyCode.X);
-    }
-
-    public bool GetYButton()
-    {
-        return OVRInput.Get(OVRInput.RawButton.Y) || GetKey(KeyCode.Y);
-    }
-
-    public Vector2 GetLStick()
-    {
-        Vector2 ovrStick = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick);
-        return ovrStick + GetCursor();
-    }
-
-    public Vector2 GetCursor()
-    {
-        Vector2 cursor = new Vector2(0, 0);
-        if (GetKey(KeyCode.UpArrow))
+        public MyController(ButtonMap buttonMap = null)
         {
-            cursor += new Vector2(0, 1);
+            rController = GameObject.Find("RightHandAnchor");
+            if (buttonMap != null)
+            {
+                this.buttonMap = buttonMap;
+            } else
+            {
+                this.buttonMap = MyController.defaultButtonMap;
+            }
         }
-        if (GetKey(KeyCode.DownArrow))
+
+        public Vector3 GetRControllerPosition()
         {
-            cursor += new Vector2(0, -1);
+            return rController.GetComponent<Transform>().position;
         }
-        if (GetKey(KeyCode.RightArrow))
+
+        public bool GetKey(KeyCode keyCode)
         {
-            cursor += new Vector2(1, 0);
+            return Input.GetKey(keyCode);
         }
-        if (GetKey(KeyCode.LeftArrow))
+
+        public bool GetAButton()
         {
-            cursor += new Vector2(-1, 0);
+            return OVRInput.Get(OVRInput.RawButton.A) || GetKey(this.buttonMap[OVRInput.RawButton.A]);
         }
-        return cursor;
+
+        public bool GetBButton()
+        {
+            return OVRInput.Get(OVRInput.RawButton.B) || GetKey(this.buttonMap[OVRInput.RawButton.B]);
+        }
+
+        public bool GetXButton()
+        {
+            return OVRInput.Get(OVRInput.RawButton.X) || GetKey(this.buttonMap[OVRInput.RawButton.X]);
+        }
+
+        public bool GetYButton()
+        {
+            return OVRInput.Get(OVRInput.RawButton.Y) || GetKey(this.buttonMap[OVRInput.RawButton.Y]);
+        }
+
+        public Vector2 GetLStick()
+        {
+            Vector2 ovrStick = OVRInput.Get(OVRInput.RawAxis2D.LThumbstick);
+            return ovrStick + GetCursor();
+        }
+
+        public Vector2 GetCursor()
+        {
+            Vector2 cursor = new Vector2(0, 0);
+            if (GetKey(KeyCode.UpArrow))
+            {
+                cursor += new Vector2(0, 1);
+            }
+            if (GetKey(KeyCode.DownArrow))
+            {
+                cursor += new Vector2(0, -1);
+            }
+            if (GetKey(KeyCode.RightArrow))
+            {
+                cursor += new Vector2(1, 0);
+            }
+            if (GetKey(KeyCode.LeftArrow))
+            {
+                cursor += new Vector2(-1, 0);
+            }
+            return cursor;
+        }
     }
+
 }
