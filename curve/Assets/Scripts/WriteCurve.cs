@@ -5,9 +5,6 @@ using UnityEngine;
 
 public class WriteCurve : MonoBehaviour
 {
-    public GameObject pointPrefab;
-    public GameObject points;
-
     [SerializeField] private int longitude = 200;
     [SerializeField] private int meridian = 20;
     [SerializeField] private float radius = 0.05f;
@@ -132,52 +129,5 @@ public class WriteCurve : MonoBehaviour
     int GetIndex(int i, int j)
     {
         return (meridian + 1) * i + j;
-    }
-
-    /// <summary>
-    /// ここから下はデバッグ用に作ったもの(なので曲線の描画そのものには関係ない)
-    /// </summary>
-    void WriteForDebug()
-    {
-        for (int i = 0; i < longitude; i++)
-        {
-            float t0 = (float)i / longitude;
-            float t1 = (float)(i + 1) / longitude;
-            WritePoint(Curve(t0));
-            //WriteLine(Curve(t0), Curve(t1));
-            //WriteLine(Curve(t0), Curve(t0) + Tangent(t0));
-            //WriteVector(Curve(t0), PrincipalNormal(t0));
-            //WriteVector(Curve(t0), Binormal(t0));
-            for (int j = 0; j < meridian; j++)
-            {
-                WriteVector(Curve(t0), Normal(t0, (float)j / meridian));
-            }
-        }
-    }
-
-    void WritePoint(Vector3 p)
-    {
-        float pointSize = 0.03f;
-        GameObject g = Instantiate(pointPrefab, points.transform);
-        g.transform.position = p;
-        g.transform.localScale = new Vector3(pointSize, pointSize, pointSize);
-    }
-
-    void WriteLine(Vector3 start, Vector3 end)
-    {
-        // https://qiita.com/7of9/items/3750d30590e3efcfd389
-        float width = 0.01f;
-        GameObject line = new GameObject("Line");
-        LineRenderer renderer = line.AddComponent<LineRenderer>();
-        renderer.SetVertexCount(2);
-        renderer.SetWidth(width, width);
-        renderer.SetPosition(0, start);
-        renderer.SetPosition(1, end);
-    }
-
-    void WriteVector(Vector3 start, Vector3 vector)
-    {
-        float length = 2 * radius;
-        WriteLine(start, start + length * vector);
     }
 }
