@@ -58,7 +58,7 @@ public class Main : MonoBehaviour
         this.controller = new MyController(
             buttonMap: ButtonMap.defaultValue,
             rStickMap: Stick2DMap.defaultValue,
-            rStickMap3D: Stick3DMap.defaultValue
+            rControllerMover: Stick3DMap.defaultValue
         );
     }
 }

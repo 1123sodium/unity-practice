@@ -118,25 +118,26 @@ namespace MyUtil
     
     public class MyController
     {
-        private GameObject rController;
         private ButtonMap buttonMap;
-        private Stick2DMap rStickMap;
-        private Stick3DMap rStickMap3D;
-        private Vector3 rControllerPosition = new Vector3(0, 0, 0);
-        private GameObject cube;
 
-        public MyController(ButtonMap buttonMap = null, Stick2DMap rStickMap = null, Stick3DMap rStickMap3D = null)
+        private GameObject rController;
+        private Stick2DMap rStickMap;
+        private Stick3DMap rControllerMover;
+        private Vector3 rControllerPosition = new Vector3(0, 0, 0);
+        private GameObject rCube;
+
+        public MyController(ButtonMap buttonMap = null, Stick2DMap rStickMap = null, Stick3DMap rControllerMover = null)
         {
             this.rController = GameObject.Find("RightHandAnchor");
             this.buttonMap = buttonMap;
             this.rStickMap = rStickMap;
-            this.rStickMap3D = rStickMap3D;
+            this.rControllerMover = rControllerMover;
 
             if (!this.IsOnHeadset())
             {
-                this.cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                this.cube.transform.position = this.rControllerPosition;
-                this.cube.transform.localScale = new Vector3(1, 1, 1) * 0.3f;
+                this.rCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                this.rCube.transform.position = this.rControllerPosition;
+                this.rCube.transform.localScale = new Vector3(1, 1, 1) * 0.3f;
             }
         }
 
@@ -148,36 +149,12 @@ namespace MyUtil
 
         public void Update()
         {
-            if (this.rStickMap3D != null)
+            if (this.rControllerMover != null)
             {
-                this.rControllerPosition += this.rStickMap3D.ToVector3() * 0.1f;
+                this.rControllerPosition += this.rControllerMover.ToVector3() * 0.1f;
             }
             if (!this.IsOnHeadset()) {
-                this.cube.transform.position = this.rControllerPosition;
-            }
-        }
-
-        public Vector3 GetRControllerPosition()
-        {
-            if (this.IsOnHeadset())
-            {
-                return this.rController.GetComponent<Transform>().position;
-            }
-            else
-            {
-                return this.rControllerPosition;
-            }
-        }
-
-        public Quaternion GetRControllerRotation()
-        {
-            if (this.IsOnHeadset())
-            {
-                return this.rController.GetComponent<Transform>().rotation;
-            }
-            else
-            {
-                return Quaternion.identity;
+                this.rCube.transform.position = this.rControllerPosition;
             }
         }
 
@@ -242,6 +219,7 @@ namespace MyUtil
             }
         }
 
+        ///// 右手 /////
         public Vector2 GetRStick()
         {
             if (this.IsOnHeadset())
@@ -258,6 +236,30 @@ namespace MyUtil
                 {
                     return this.rStickMap.ToVector2();
                 }
+            }
+        }
+
+        public Vector3 GetRControllerPosition()
+        {
+            if (this.IsOnHeadset())
+            {
+                return this.rController.GetComponent<Transform>().position;
+            }
+            else
+            {
+                return this.rControllerPosition;
+            }
+        }
+
+        public Quaternion GetRControllerRotation()
+        {
+            if (this.IsOnHeadset())
+            {
+                return this.rController.GetComponent<Transform>().rotation;
+            }
+            else
+            {
+                return Quaternion.identity;
             }
         }
     }
