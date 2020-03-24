@@ -195,13 +195,24 @@ namespace MyUtil
         {
             if (this.IsOnHeadset())
             {
-                return rController.GetComponent<Transform>().position;
+                return this.rController.GetComponent<Transform>().position;
             }
             else
             {
                 return this.rControllerPosition;
             }
-            
+        }
+
+        public Quaternion GetRControllerRotation()
+        {
+            if (this.IsOnHeadset())
+            {
+                return this.rController.GetComponent<Transform>().rotation;
+            }
+            else
+            {
+                return Quaternion.identity;
+            }
         }
 
         /*

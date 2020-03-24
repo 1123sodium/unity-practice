@@ -40,6 +40,7 @@ public class Main : MonoBehaviour
         // curveAtController
         this.controller.Update();
         this.curveAtController.SetPosition(this.controller.GetRControllerPosition());
+        this.curveAtController.SetRotation(this.controller.GetRControllerRotation());
         this.curveAtController.DrawMesh();
     }
 

@@ -14,6 +14,7 @@ public class WriteCurve // : MonoBehaviour
     private Mesh _mesh;
 
     private Vector3 position = new Vector3(0, 0, 0);
+    private Quaternion rotation = Quaternion.identity;
 
     public WriteCurve(Material material, float scale = 1.0f)
     {
@@ -44,7 +45,7 @@ public class WriteCurve // : MonoBehaviour
 
     public void DrawMesh()
     {
-        Graphics.DrawMesh(this._mesh, this.position, Quaternion.identity, this._material, 0);
+        Graphics.DrawMesh(this._mesh, this.position, this.rotation, this._material, 0);
     }
 
     public void MovePosition(Vector3 velocity)
@@ -55,6 +56,11 @@ public class WriteCurve // : MonoBehaviour
     public void SetPosition(Vector3 position)
     {
         this.position = position;
+    }
+
+    public void SetRotation(Quaternion rotation)
+    {
+        this.rotation = rotation;
     }
 
     Vector3 Curve(float t)
