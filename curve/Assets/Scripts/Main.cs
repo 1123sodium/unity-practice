@@ -6,6 +6,7 @@ using MyUtil;
 public class Main : MonoBehaviour
 {
     [SerializeField] Material _material;
+    [SerializeField] Material _material2;
     private MyController controller;
     private WriteCurve curve;
     private WriteCurve curveAtController;
@@ -17,7 +18,7 @@ public class Main : MonoBehaviour
         this.SetCameraPosition();
         this.controller = new MyController();
         this.curve = new WriteCurve(this._material);
-        this.curveAtController = new WriteCurve(this._material, 0.3f);
+        this.curveAtController = new WriteCurve(this._material2, 0.3f);
     }
 
     // Update is called once per frame
