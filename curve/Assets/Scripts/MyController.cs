@@ -205,15 +205,16 @@ namespace MyUtil
     public class MyController
     {
         private ButtonMap buttonMap;
-
-        //private GameObject rController;
-        //private Stick2DMap rStickMap;
-        //private Stick3DMap rControllerMover;
-        //private Vector3 rControllerPosition = new Vector3(0, 0, 0);
-        //private GameObject rCube;
         public VRController rController;
+        public VRController lController;
 
-        public MyController(ButtonMap buttonMap = null, Stick2DMap rStickMap = null, Stick3DMap rControllerMover = null)
+        public MyController(
+            ButtonMap buttonMap = null, 
+            Stick2DMap rStickMap = null,
+            Stick3DMap rControllerMover = null,
+            Stick2DMap lStickMap = null,
+            Stick3DMap lControllerMover = null
+        )
         {
             this.buttonMap = buttonMap;
             this.rController = new VRController(
@@ -223,17 +224,13 @@ namespace MyUtil
                 positionMover: rControllerMover,
                 this.IsOnHeadset()
             );
-
-            //this.rController = GameObject.Find("RightHandAnchor");
-            //this.rStickMap = rStickMap;
-            //this.rControllerMover = rControllerMover;
-
-            //if (!this.IsOnHeadset())
-            //{
-            //    this.rCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //    this.rCube.transform.position = this.rControllerPosition;
-            //    this.rCube.transform.localScale = new Vector3(1, 1, 1) * 0.3f;
-            //}
+            this.lController = new VRController(
+                handAnchorName: "LeftHandAnchor",
+                stick: OVRInput.RawAxis2D.LThumbstick,
+                stickMap: lStickMap,
+                positionMover: lControllerMover,
+                this.IsOnHeadset()
+            );
         }
 
         private bool IsOnHeadset()
@@ -245,6 +242,7 @@ namespace MyUtil
         public void Update()
         {
             this.rController.Update();
+            this.lController.Update();
         }
 
         public bool GetButton(OVRInput.RawButton button)
