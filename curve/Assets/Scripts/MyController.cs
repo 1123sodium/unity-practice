@@ -127,31 +127,11 @@ namespace MyUtil
 
         public MyController(ButtonMap buttonMap = null, Stick2DMap rStickMap = null, Stick3DMap rStickMap3D = null)
         {
-            rController = GameObject.Find("RightHandAnchor");
-            if (buttonMap != null)
-            {
-                this.buttonMap = buttonMap;
-            } 
-            else
-            {
-                this.buttonMap = ButtonMap.defaultValue;
-            }
-            if (rStickMap != null)
-            {
-                this.rStickMap = rStickMap;
-            }
-            else
-            {
-                this.rStickMap = Stick2DMap.defaultValue;
-            }
-            if (rStickMap3D != null)
-            {
-                this.rStickMap3D = rStickMap3D;
-            }
-            else
-            {
-                this.rStickMap3D = Stick3DMap.defaultValue;
-            }
+            this.rController = GameObject.Find("RightHandAnchor");
+            this.buttonMap = buttonMap;
+            this.rStickMap = rStickMap;
+            this.rStickMap3D = rStickMap3D;
+
             if (!this.IsOnHeadset())
             {
                 this.cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -163,20 +143,15 @@ namespace MyUtil
         private bool IsOnHeadset()
         {
             string productName = OVRPlugin.productName;
-            if (productName == null || productName == "")
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-            
+            return !(productName == null || productName == "");
         }
 
         public void Update()
         {
-            this.rControllerPosition += this.rStickMap3D.ToVector3() * 0.1f;
+            if (this.rStickMap3D != null)
+            {
+                this.rControllerPosition += this.rStickMap3D.ToVector3() * 0.1f;
+            }
             if (!this.IsOnHeadset()) {
                 this.cube.transform.position = this.rControllerPosition;
             }
@@ -208,7 +183,24 @@ namespace MyUtil
 
         public bool GetButton(OVRInput.RawButton button)
         {
-            return OVRInput.Get(button) || Input.GetKey(this.buttonMap[button]);
+            if (this.IsOnHeadset())
+            {
+                return OVRInput.Get(button);
+            }
+            else
+            {
+                if (this.buttonMap == null)
+                {
+                    return false;
+                }
+                if (!this.buttonMap.ContainsKey(button))
+                {
+                    Debug.LogWarning($"MyController.buttonMap does not contain the key {button}");
+                    return false;
+                }
+                return Input.GetKey(this.buttonMap[button]);
+
+            }
         }
 
 
@@ -220,7 +212,14 @@ namespace MyUtil
             }
             else
             {
-                return this.rStickMap.ToVector2();
+                if (this.rStickMap == null)
+                {
+                    return new Vector2(0, 0);
+                }
+                else
+                {
+                    return this.rStickMap.ToVector2();
+                }
             }
         }
     }

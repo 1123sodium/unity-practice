@@ -17,14 +17,14 @@ public class Main : MonoBehaviour
         Debug.Log("Start!!!");
         Debug.Log(OVRPlugin.productName);
         this.SetCameraPosition();
-        this.controller = new MyController();
+        this.SetUpController();
         this.curve = new WriteCurve(this._material);
         this.curveAtController = new WriteCurve(this._material2, 0.3f);
     }
 
     // Update is called once per frame
     void Update()
-    { 
+    {
         if (this.controller.GetButton(OVRInput.RawButton.A) || this.controller.GetButton(OVRInput.RawButton.X))
         {
             this.curve.MovePosition(new Vector3(0, 0, 0.1f));
@@ -51,5 +51,14 @@ public class Main : MonoBehaviour
         Vector3 cameraPosition = new Vector3(0, 0, -2);
         camera.transform.position = cameraPosition;
         camera.transform.forward = -cameraPosition;
+    }
+
+    void SetUpController()
+    {
+        this.controller = new MyController(
+            buttonMap: ButtonMap.defaultValue,
+            rStickMap: Stick2DMap.defaultValue,
+            rStickMap3D: Stick3DMap.defaultValue
+        );
     }
 }
