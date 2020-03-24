@@ -56,9 +56,10 @@ public class Main : MonoBehaviour
     void SetUpController()
     {
         this.controller = new MyController(
-            buttonMap: ButtonMap.defaultValue,
-            rStickMap: Stick2DMap.defaultValue,
-            rControllerMover: Stick3DMap.defaultValue
+            buttonMap: ButtonMap.PositionalKeys,
+            rStickMap: Stick2DMap.Arrows,
+            rControllerMover: Stick3DMap.OKLSemiIComma,
+            lControllerMover: Stick3DMap.WASDEC
         );
     }
 }

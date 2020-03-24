@@ -17,14 +17,25 @@ namespace MyUtil
             return new ButtonMap(data);
         }*/
 
-        public static ButtonMap defaultValue = new ButtonMap( new ButtonMapData{
+        public static ButtonMap LiteralKeys = new ButtonMap( new ButtonMapData{
             { OVRInput.RawButton.A, KeyCode.A },
             { OVRInput.RawButton.B, KeyCode.B },
             { OVRInput.RawButton.X, KeyCode.X },
-            { OVRInput.RawButton.Y, KeyCode.Y }
+            { OVRInput.RawButton.Y, KeyCode.Y },
+            { OVRInput.RawButton.RIndexTrigger, KeyCode.R },
+            { OVRInput.RawButton.LIndexTrigger, KeyCode.L }
+        });
+
+        public static ButtonMap PositionalKeys = new ButtonMap(new ButtonMapData{
+            { OVRInput.RawButton.A, KeyCode.Comma },
+            { OVRInput.RawButton.B, KeyCode.Period },
+            { OVRInput.RawButton.X, KeyCode.X },
+            { OVRInput.RawButton.Y, KeyCode.Z },
+            { OVRInput.RawButton.RIndexTrigger, KeyCode.P },
+            { OVRInput.RawButton.LIndexTrigger, KeyCode.Q }
         });
     }
-
+    
     public enum Stick2D
     {
         Up, Down, Left, Right
@@ -34,12 +45,36 @@ namespace MyUtil
     {
         public Stick2DMap(Stick2DMapData data): base(data) { }
 
-        public static Stick2DMap defaultValue = new Stick2DMap( new Stick2DMapData
+        public static Stick2DMap Arrows = new Stick2DMap( new Stick2DMapData
         {
             { Stick2D.Up, KeyCode.UpArrow },
             { Stick2D.Down, KeyCode.DownArrow },
             { Stick2D.Right, KeyCode.RightArrow },
             { Stick2D.Left, KeyCode.LeftArrow }
+        });
+
+        public static Stick2DMap WASD = new Stick2DMap( new Stick2DMapData
+        {
+            { Stick2D.Up, KeyCode.W },
+            { Stick2D.Down, KeyCode.S },
+            { Stick2D.Right, KeyCode.D },
+            { Stick2D.Left, KeyCode.A }
+        });
+
+        /*
+        public static Stick2DMap ijkl = new Stick2DMap(new Stick2DMapData {
+            { Stick2D.Up, KeyCode.I },
+            { Stick2D.Down, KeyCode.K },
+            { Stick2D.Right, KeyCode.L },
+            { Stick2D.Left, KeyCode.J }
+        });
+        */
+
+        public static Stick2DMap OKLSemi = new Stick2DMap(new Stick2DMapData {
+            { Stick2D.Up, KeyCode.O },
+            { Stick2D.Down, KeyCode.L },
+            { Stick2D.Right, KeyCode.K },
+            { Stick2D.Left, KeyCode.Comma }
         });
 
         public Vector2 ToVector2()
@@ -74,16 +109,38 @@ namespace MyUtil
     {
         public Stick3DMap(Stick3DMapData data): base(data) { }
 
-        public static Stick3DMap defaultValue = new Stick3DMap(new Stick3DMapData
+        public static Stick3DMap WASDEC = new Stick3DMap(new Stick3DMapData
+        {
+            { Stick3D.Up, KeyCode.W },
+            { Stick3D.Down, KeyCode.S },
+            { Stick3D.Right, KeyCode.D },
+            { Stick3D.Left, KeyCode.A },
+            { Stick3D.Above, KeyCode.E },
+            { Stick3D.Below, KeyCode.C }
+        });
+
+        /*
+        public static Stick3DMap ijklum = new Stick3DMap(new Stick3DMapData
         {
             { Stick3D.Up, KeyCode.I },
-            { Stick3D.Down, KeyCode.Comma },
+            { Stick3D.Down, KeyCode.K },
             { Stick3D.Right, KeyCode.L },
             { Stick3D.Left, KeyCode.J },
             { Stick3D.Above, KeyCode.U },
             { Stick3D.Below, KeyCode.M }
         });
-            
+        */
+
+        public static Stick3DMap OKLSemiIComma = new Stick3DMap(new Stick3DMapData
+        {
+            { Stick3D.Up, KeyCode.O },
+            { Stick3D.Down, KeyCode.L },
+            { Stick3D.Right, KeyCode.Semicolon },
+            { Stick3D.Left, KeyCode.K },
+            { Stick3D.Above, KeyCode.I },
+            { Stick3D.Below, KeyCode.Comma }
+        });
+
         public Vector3 ToVector3()
         {
             Vector3 direction = new Vector3(0, 0, 0);
