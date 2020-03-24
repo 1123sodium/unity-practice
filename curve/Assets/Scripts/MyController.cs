@@ -199,10 +199,48 @@ namespace MyUtil
                     return false;
                 }
                 return Input.GetKey(this.buttonMap[button]);
-
             }
         }
-
+        public bool GetButtonDown(OVRInput.RawButton button)
+        {
+            if (this.IsOnHeadset())
+            {
+                return OVRInput.GetDown(button);
+            }
+            else
+            {
+                if (this.buttonMap == null)
+                {
+                    return false;
+                }
+                if (!this.buttonMap.ContainsKey(button))
+                {
+                    Debug.LogWarning($"MyController.buttonMap does not contain the key {button}");
+                    return false;
+                }
+                return Input.GetKeyDown(this.buttonMap[button]);
+            }
+        }
+        public bool GetButtonUp(OVRInput.RawButton button)
+        {
+            if (this.IsOnHeadset())
+            {
+                return OVRInput.GetUp(button);
+            }
+            else
+            {
+                if (this.buttonMap == null)
+                {
+                    return false;
+                }
+                if (!this.buttonMap.ContainsKey(button))
+                {
+                    Debug.LogWarning($"MyController.buttonMap does not contain the key {button}");
+                    return false;
+                }
+                return Input.GetKeyUp(this.buttonMap[button]);
+            }
+        }
 
         public Vector2 GetRStick()
         {
