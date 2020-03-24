@@ -33,14 +33,14 @@ public class Main : MonoBehaviour
         {
             this.curve.MovePosition(new Vector3(0, 0, -0.1f));
         }
-        Vector2 rStick = this.controller.GetRStick();
+        Vector2 rStick = this.controller.rController.GetStick();
         this.curve.MovePosition(new Vector3(rStick.x, rStick.y, 0) * 0.1f);
         this.curve.DrawMesh();
 
         // curveAtController
         this.controller.Update();
-        this.curveAtController.SetPosition(this.controller.GetRControllerPosition());
-        this.curveAtController.SetRotation(this.controller.GetRControllerRotation());
+        this.curveAtController.SetPosition(this.controller.rController.GetPosition());
+        this.curveAtController.SetRotation(this.controller.rController.GetRotation());
         this.curveAtController.DrawMesh();
     }
 
