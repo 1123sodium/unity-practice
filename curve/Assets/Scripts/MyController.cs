@@ -6,6 +6,7 @@ namespace MyUtil
 {
     using ButtonMapData = Dictionary<OVRInput.RawButton, KeyCode>;
     using Stick2DMapData = Dictionary<Stick2D, KeyCode>;
+    using Stick3DMapData = Dictionary<Stick3D, KeyCode>;
 
     public class ButtonMap : ButtonMapData
     {
@@ -64,55 +65,49 @@ namespace MyUtil
         }
     }
 
-    public class StickMap3D
+    public enum Stick3D
     {
-        public KeyCode up;
-        public KeyCode down;
-        public KeyCode left;
-        public KeyCode right;
-        public KeyCode above;
-        public KeyCode below;
+        Up, Down, Left, Right, Above, Below
+    }
 
-        public StickMap3D(KeyCode up, KeyCode down, KeyCode left, KeyCode right, KeyCode above, KeyCode below)
+    public class Stick3DMap : Stick3DMapData
+    {
+        public Stick3DMap(Stick3DMapData data): base(data) { }
+
+        public static Stick3DMap defaultValue = new Stick3DMap(new Stick3DMapData
         {
-            this.up = up;
-            this.down = down;
-            this.left = left;
-            this.right = right;
-            this.above = above;
-            this.below = below;
-        }
-
-        public static StickMap3D defaultValue = new StickMap3D(
-            up: KeyCode.I, down: KeyCode.Comma,
-            left: KeyCode.J, right: KeyCode.L,
-            above: KeyCode.U, below: KeyCode.M
-        );
-
+            { Stick3D.Up, KeyCode.I },
+            { Stick3D.Down, KeyCode.Comma },
+            { Stick3D.Right, KeyCode.L },
+            { Stick3D.Left, KeyCode.J },
+            { Stick3D.Above, KeyCode.U },
+            { Stick3D.Below, KeyCode.M }
+        });
+            
         public Vector3 ToVector3()
         {
             Vector3 direction = new Vector3(0, 0, 0);
-            if (Input.GetKey(this.up))
+            if (Input.GetKey(this[Stick3D.Up]))
             {
                 direction += new Vector3(0, 1, 0);
             }
-            if (Input.GetKey(this.down))
+            if (Input.GetKey(this[Stick3D.Down]))
             {
                 direction += new Vector3(0, -1, 0);
             }
-            if (Input.GetKey(this.right))
+            if (Input.GetKey(this[Stick3D.Right]))
             {
                 direction += new Vector3(1, 0, 0);
             }
-            if (Input.GetKey(this.left))
+            if (Input.GetKey(this[Stick3D.Left]))
             {
                 direction += new Vector3(-1, 0, 0);
             }
-            if (Input.GetKey(this.above))
+            if (Input.GetKey(this[Stick3D.Above]))
             {
                 direction += new Vector3(0, 0, 1);
             }
-            if (Input.GetKey(this.below))
+            if (Input.GetKey(this[Stick3D.Below]))
             {
                 direction += new Vector3(0, 0, -1);
             }
@@ -126,11 +121,11 @@ namespace MyUtil
         private GameObject rController;
         private ButtonMap buttonMap;
         private Stick2DMap rStickMap;
-        private StickMap3D rStickMap3D;
+        private Stick3DMap rStickMap3D;
         private Vector3 rControllerPosition = new Vector3(0, 0, 0);
         private GameObject cube;
 
-        public MyController(ButtonMap buttonMap = null, Stick2DMap rStickMap = null, StickMap3D rStickMap3D = null)
+        public MyController(ButtonMap buttonMap = null, Stick2DMap rStickMap = null, Stick3DMap rStickMap3D = null)
         {
             rController = GameObject.Find("RightHandAnchor");
             if (buttonMap != null)
@@ -155,7 +150,7 @@ namespace MyUtil
             }
             else
             {
-                this.rStickMap3D = StickMap3D.defaultValue;
+                this.rStickMap3D = Stick3DMap.defaultValue;
             }
             if (!this.IsOnHeadset())
             {
