@@ -4,25 +4,23 @@ using UnityEngine;
 
 namespace MyUtil
 {
-    // using ButtonMap = Dictionary<OVRInput.RawButton, KeyCode>;
-    public class ButtonMap
+    using ButtonMapData = Dictionary<OVRInput.RawButton, KeyCode>;
+
+    public class ButtonMap : ButtonMapData
     {
-        public KeyCode a;
-        public KeyCode b;
-        public KeyCode x;
-        public KeyCode y;
-
-        public ButtonMap(KeyCode a, KeyCode b, KeyCode x, KeyCode y)
+        public ButtonMap(ButtonMapData data): base(data) { }
+       
+        /*public static implicit operator ButtonMap(ButtonMapData data)
         {
-            this.a = a;
-            this.b = b;
-            this.x = x;
-            this.y = y;
-        }
+            return new ButtonMap(data);
+        }*/
 
-        public static ButtonMap defaultValue = new ButtonMap(
-            a: KeyCode.A, b: KeyCode.B, x: KeyCode.X, y: KeyCode.Y
-        );
+        public static ButtonMap defaultValue = new ButtonMap( new ButtonMapData{
+            { OVRInput.RawButton.A, KeyCode.A },
+            { OVRInput.RawButton.B, KeyCode.B },
+            { OVRInput.RawButton.X, KeyCode.X },
+            { OVRInput.RawButton.Y, KeyCode.Y }
+        });
     }
 
     public class StickMap
@@ -215,32 +213,11 @@ namespace MyUtil
             }
         }
 
-        /*
-        public bool GetKey(KeyCode keyCode)
+        public bool GetButton(OVRInput.RawButton button)
         {
-            return Input.GetKey(keyCode);
-        }
-        */
-
-        public bool GetAButton()
-        {
-            return OVRInput.Get(OVRInput.RawButton.A) || Input.GetKey(this.buttonMap.a);
+            return OVRInput.Get(button) || Input.GetKey(this.buttonMap[button]);
         }
 
-        public bool GetBButton()
-        {
-            return OVRInput.Get(OVRInput.RawButton.B) || Input.GetKey(this.buttonMap.b);
-        }
-
-        public bool GetXButton()
-        {
-            return OVRInput.Get(OVRInput.RawButton.X) || Input.GetKey(this.buttonMap.x);
-        }
-
-        public bool GetYButton()
-        {
-            return OVRInput.Get(OVRInput.RawButton.Y) || Input.GetKey(this.buttonMap.y);
-        }
 
         public Vector2 GetRStick()
         {

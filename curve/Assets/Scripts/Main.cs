@@ -25,11 +25,11 @@ public class Main : MonoBehaviour
     // Update is called once per frame
     void Update()
     { 
-        if (this.controller.GetAButton() || this.controller.GetXButton())
+        if (this.controller.GetButton(OVRInput.RawButton.A) || this.controller.GetButton(OVRInput.RawButton.X))
         {
             this.curve.MovePosition(new Vector3(0, 0, 0.1f));
         }
-        else if (this.controller.GetBButton() || this.controller.GetYButton())
+        else if (this.controller.GetButton(OVRInput.RawButton.B) || this.controller.GetButton(OVRInput.RawButton.Y))
         {
             this.curve.MovePosition(new Vector3(0, 0, -0.1f));
         }
