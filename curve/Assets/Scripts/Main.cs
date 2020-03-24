@@ -24,7 +24,7 @@ public class Main : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    { 
         if (this.controller.GetAButton() || this.controller.GetXButton())
         {
             this.curve.MovePosition(new Vector3(0, 0, 0.1f));
@@ -38,7 +38,7 @@ public class Main : MonoBehaviour
         this.curve.DrawMesh();
 
         // curveAtController
-        this.controller.UpdateRStickPosition();
+        this.controller.Update();
         this.curveAtController.SetPosition(this.controller.GetRControllerPosition());
         this.curveAtController.DrawMesh();
     }

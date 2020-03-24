@@ -132,6 +132,7 @@ namespace MyUtil
         private StickMap rStickMap;
         private StickMap3D rStickMap3D;
         private Vector3 rControllerPosition = new Vector3(0, 0, 0);
+        private GameObject cube;
 
         public MyController(ButtonMap buttonMap = null, StickMap rStickMap = null, StickMap3D rStickMap3D = null)
         {
@@ -160,6 +161,12 @@ namespace MyUtil
             {
                 this.rStickMap3D = StickMap3D.defaultValue;
             }
+            if (!this.IsOnHeadset())
+            {
+                this.cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                this.cube.transform.position = this.rControllerPosition;
+                this.cube.transform.localScale = new Vector3(1, 1, 1) * 0.3f;
+            }
         }
 
         private bool IsOnHeadset()
@@ -176,9 +183,12 @@ namespace MyUtil
             
         }
 
-        public void UpdateRStickPosition()
+        public void Update()
         {
             this.rControllerPosition += this.rStickMap3D.ToVector3() * 0.1f;
+            if (!this.IsOnHeadset()) {
+                this.cube.transform.position = this.rControllerPosition;
+            }
         }
 
         public Vector3 GetRControllerPosition()
