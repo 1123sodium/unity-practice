@@ -162,6 +162,20 @@ namespace MyUtil
             }
         }
 
+        private bool IsOnHeadset()
+        {
+            string productName = OVRPlugin.productName;
+            if (productName == null || productName == "")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+            
+        }
+
         public void UpdateRStickPosition()
         {
             this.rControllerPosition += this.rStickMap3D.ToVector3() * 0.1f;
@@ -169,7 +183,7 @@ namespace MyUtil
 
         public Vector3 GetRControllerPosition()
         {
-            if (OVRPlugin.productName != null)
+            if (this.IsOnHeadset())
             {
                 return rController.GetComponent<Transform>().position;
             }
@@ -209,8 +223,14 @@ namespace MyUtil
 
         public Vector2 GetRStick()
         {
-            Vector2 ovrStick = OVRInput.Get(OVRInput.RawAxis2D.RThumbstick);
-            return ovrStick + this.rStickMap.ToVector2();
+            if (this.IsOnHeadset())
+            {
+                return OVRInput.Get(OVRInput.RawAxis2D.RThumbstick);
+            }
+            else
+            {
+                return this.rStickMap.ToVector2();
+            }
         }
     }
 

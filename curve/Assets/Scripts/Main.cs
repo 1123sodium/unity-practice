@@ -15,6 +15,7 @@ public class Main : MonoBehaviour
     void Start()
     {
         Debug.Log("Start!!!");
+        Debug.Log(OVRPlugin.productName);
         this.SetCameraPosition();
         this.controller = new MyController();
         this.curve = new WriteCurve(this._material);
