@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 using static OVRInput;
 
-namespace MyUtil
+namespace DebugUtil
 {
 
     using ButtonMapData = List<(RawButton button, KeyCode key)>;
@@ -348,13 +348,13 @@ namespace MyUtil
 
 
 
-    public class MyController
+    public class Controller
     {
         private ButtonMap buttonMap;
         public VRController rController;
         public VRController lController;
 
-        public MyController(
+        public Controller(
             ButtonMap buttonMap = null, 
             Stick2DMap rStickMap = null,
             Stick3DMap rControllerMover = null,

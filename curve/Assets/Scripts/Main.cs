@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using MyUtil;
+using DebugUtil;
 
 public class Main : MonoBehaviour
 {
     [SerializeField] Material _material;
     [SerializeField] Material _material2;
-    private MyController controller;
+    private Controller controller;
     private WriteCurve curve;
     private WriteCurve curveAtController;
 
@@ -55,7 +55,7 @@ public class Main : MonoBehaviour
 
     void SetUpController()
     {
-        this.controller = new MyController(
+        this.controller = new Controller(
             buttonMap: ButtonMap.PositionalKeys,
             rStickMap: Stick2DMap.Arrows,
             rControllerMover: Stick3DMap.OKLSemiIComma,
