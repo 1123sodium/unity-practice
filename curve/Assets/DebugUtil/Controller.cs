@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static OVRInput;
 
 namespace DebugUtil
 {
@@ -10,30 +9,30 @@ namespace DebugUtil
     public class Controller
     {
         private ButtonMap buttonMap;
-        public VRController rController;
-        public VRController lController;
+        public VRController rightHand;
+        public VRController leftHand;
 
         public Controller(
             ButtonMap buttonMap = null, 
-            Stick2DMap rStickMap = null,
-            Stick3DMap rControllerMover = null,
-            Stick2DMap lStickMap = null,
-            Stick3DMap lControllerMover = null
+            Stick2DMap rightStickMap = null,
+            Stick3DMap rightHandMover = null,
+            Stick2DMap leftStickMap = null,
+            Stick3DMap leftHandMover = null
         )
         {
             this.buttonMap = buttonMap;
-            this.rController = new VRController(
+            this.rightHand = new VRController(
                 handAnchorName: "RightHandAnchor",
-                stick: RawAxis2D.RThumbstick,
-                stickMap: rStickMap,
-                positionMover: rControllerMover,
+                stick: OVRInput.RawAxis2D.RThumbstick,
+                stickMap: rightStickMap,
+                positionMover: rightHandMover,
                 this.IsOnHeadset()
             );
-            this.lController = new VRController(
+            this.leftHand = new VRController(
                 handAnchorName: "LeftHandAnchor",
-                stick: RawAxis2D.LThumbstick,
-                stickMap: lStickMap,
-                positionMover: lControllerMover,
+                stick: OVRInput.RawAxis2D.LThumbstick,
+                stickMap: leftStickMap,
+                positionMover: leftHandMover,
                 this.IsOnHeadset()
             );
         }
@@ -46,15 +45,15 @@ namespace DebugUtil
 
         public void Update()
         {
-            this.rController.Update();
-            this.lController.Update();
+            this.rightHand.Update();
+            this.leftHand.Update();
         }
 
-        public bool GetButton(RawButton button)
+        public bool GetButton(OVRInput.RawButton button)
         {
             if (this.IsOnHeadset())
             {
-                return Get(button);
+                return OVRInput.Get(button);
             }
             else
             {
@@ -65,11 +64,11 @@ namespace DebugUtil
                 return this.buttonMap.Get(button);
             }
         }
-        public bool GetButtonDown(RawButton button)
+        public bool GetButtonDown(OVRInput.RawButton button)
         {
             if (this.IsOnHeadset())
             {
-                return GetDown(button);
+                return OVRInput.GetDown(button);
             }
             else
             {
@@ -80,11 +79,11 @@ namespace DebugUtil
                 return this.buttonMap.GetDown(button);
             }
         }
-        public bool GetButtonUp(RawButton button)
+        public bool GetButtonUp(OVRInput.RawButton button)
         {
             if (this.IsOnHeadset())
             {
-                return GetUp(button);
+                return OVRInput.GetUp(button);
             }
             else
             {

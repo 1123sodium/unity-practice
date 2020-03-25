@@ -33,14 +33,14 @@ public class Main : MonoBehaviour
         {
             this.curve.MovePosition(new Vector3(0, 0, -0.1f));
         }
-        Vector2 rStick = this.controller.rController.GetStick();
+        Vector2 rStick = this.controller.rightHand.GetStick();
         this.curve.MovePosition(new Vector3(rStick.x, rStick.y, 0) * 0.1f);
         this.curve.DrawMesh();
 
         // curveAtController
         this.controller.Update();
-        this.curveAtController.SetPosition(this.controller.rController.GetPosition());
-        this.curveAtController.SetRotation(this.controller.rController.GetRotation());
+        this.curveAtController.SetPosition(this.controller.rightHand.GetPosition());
+        this.curveAtController.SetRotation(this.controller.rightHand.GetRotation());
         this.curveAtController.DrawMesh();
     }
 
@@ -57,9 +57,9 @@ public class Main : MonoBehaviour
     {
         this.controller = new Controller(
             buttonMap: ButtonMap.PositionalKeys,
-            rStickMap: Stick2DMap.Arrows,
-            rControllerMover: Stick3DMap.OKLSemiIComma,
-            lControllerMover: Stick3DMap.WASDEC
+            rightStickMap: Stick2DMap.Arrows,
+            rightHandMover: Stick3DMap.OKLSemiIComma,
+            leftHandMover: Stick3DMap.WASDEC
         );
     }
 }
