@@ -1,39 +1,83 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using static OVRInput;
 
 namespace MyUtil
 {
-    using ButtonMapData = Dictionary<OVRInput.RawButton, KeyCode>;
+
+    using ButtonMapData = List<(RawButton button, KeyCode key)>;
     using Stick2DMapData = Dictionary<Stick2D, KeyCode>;
     using Stick3DMapData = Dictionary<Stick3D, KeyCode>;
 
-    public class ButtonMap : ButtonMapData
+    public class ButtonMap // : ButtonMapData
     {
-        public ButtonMap(ButtonMapData data): base(data) { }
-       
+        private Dictionary<RawButton, List<KeyCode>> mappedKeys = new Dictionary<RawButton, List<KeyCode>> { };
+        public ButtonMap(ButtonMapData data) {
+            foreach (var map in data)
+            {
+                if (this.mappedKeys.ContainsKey(map.button))
+                {
+                    this.mappedKeys[map.button].Add(map.key);
+                }
+                else
+                {
+                    this.mappedKeys[map.button] = new List<KeyCode> { map.key };
+                }
+            }
+        }
+
         /*public static implicit operator ButtonMap(ButtonMapData data)
         {
             return new ButtonMap(data);
         }*/
 
         public static ButtonMap LiteralKeys = new ButtonMap( new ButtonMapData{
-            { OVRInput.RawButton.A, KeyCode.A },
-            { OVRInput.RawButton.B, KeyCode.B },
-            { OVRInput.RawButton.X, KeyCode.X },
-            { OVRInput.RawButton.Y, KeyCode.Y },
-            { OVRInput.RawButton.RIndexTrigger, KeyCode.R },
-            { OVRInput.RawButton.LIndexTrigger, KeyCode.L }
+            ( RawButton.A, KeyCode.A ),
+            ( RawButton.B, KeyCode.B ),
+            ( RawButton.X, KeyCode.X ),
+            ( RawButton.Y, KeyCode.Y ),
+            ( RawButton.RIndexTrigger, KeyCode.R ),
+            ( RawButton.LIndexTrigger, KeyCode.L )
         });
 
         public static ButtonMap PositionalKeys = new ButtonMap(new ButtonMapData{
-            { OVRInput.RawButton.A, KeyCode.Comma },
-            { OVRInput.RawButton.B, KeyCode.Period },
-            { OVRInput.RawButton.X, KeyCode.X },
-            { OVRInput.RawButton.Y, KeyCode.Z },
-            { OVRInput.RawButton.RIndexTrigger, KeyCode.P },
-            { OVRInput.RawButton.LIndexTrigger, KeyCode.Q }
+            ( RawButton.A, KeyCode.Comma ),
+            ( RawButton.B, KeyCode.Period ),
+            ( RawButton.X, KeyCode.X ),
+            ( RawButton.Y, KeyCode.Z ),
+            ( RawButton.RIndexTrigger, KeyCode.P ),
+            ( RawButton.LIndexTrigger, KeyCode.Q )
         });
+
+        public bool Get(RawButton button)
+        {
+            if (!this.mappedKeys.ContainsKey(button)) 
+            {
+                return false;
+            }
+            return this.mappedKeys[button].Any(key => Input.GetKey(key));
+        }
+
+        public bool GetDown(RawButton button)
+        {
+            if (!this.mappedKeys.ContainsKey(button))
+            {
+                return false;
+            }
+            return this.mappedKeys[button].Any(key => Input.GetKeyDown(key));
+        }
+
+        public bool GetUp(RawButton button)
+        {
+            if (!this.mappedKeys.ContainsKey(button))
+            {
+                return false;
+            }
+            return this.mappedKeys[button].Any(key => Input.GetKeyUp(key));
+        }
     }
     
     public enum Stick2D
@@ -176,14 +220,14 @@ namespace MyUtil
     {
         private string handAnchorName; // warning の表示に使うだけ
         private GameObject handAnchor;
-        private OVRInput.RawAxis2D stick;
+        private RawAxis2D stick;
         private Stick2DMap stickMap;
         private Stick3DMap positionMover;
         private Vector3 position = new Vector3(0, 0, 0);
         private GameObject cube;
         private bool onHeadSet;
 
-        public VRController(string handAnchorName, OVRInput.RawAxis2D stick, Stick2DMap stickMap, Stick3DMap positionMover, bool onHeadSet)
+        public VRController(string handAnchorName, RawAxis2D stick, Stick2DMap stickMap, Stick3DMap positionMover, bool onHeadSet)
         {
             this.handAnchor = GameObject.Find(handAnchorName);
             this.stick = stick;
@@ -215,7 +259,7 @@ namespace MyUtil
         {
             if (this.onHeadSet)
             {
-                return OVRInput.Get(this.stick);
+                return Get(this.stick);
             }
             else
             {
@@ -276,14 +320,14 @@ namespace MyUtil
             this.buttonMap = buttonMap;
             this.rController = new VRController(
                 handAnchorName: "RightHandAnchor",
-                stick: OVRInput.RawAxis2D.RThumbstick,
+                stick: RawAxis2D.RThumbstick,
                 stickMap: rStickMap,
                 positionMover: rControllerMover,
                 this.IsOnHeadset()
             );
             this.lController = new VRController(
                 handAnchorName: "LeftHandAnchor",
-                stick: OVRInput.RawAxis2D.LThumbstick,
+                stick: RawAxis2D.LThumbstick,
                 stickMap: lStickMap,
                 positionMover: lControllerMover,
                 this.IsOnHeadset()
@@ -302,11 +346,11 @@ namespace MyUtil
             this.lController.Update();
         }
 
-        public bool GetButton(OVRInput.RawButton button)
+        public bool GetButton(RawButton button)
         {
             if (this.IsOnHeadset())
             {
-                return OVRInput.Get(button);
+                return Get(button);
             }
             else
             {
@@ -314,19 +358,14 @@ namespace MyUtil
                 {
                     return false;
                 }
-                if (!this.buttonMap.ContainsKey(button))
-                {
-                    Debug.LogWarning($"MyController.buttonMap does not contain the key {button}");
-                    return false;
-                }
-                return Input.GetKey(this.buttonMap[button]);
+                return this.buttonMap.Get(button);
             }
         }
-        public bool GetButtonDown(OVRInput.RawButton button)
+        public bool GetButtonDown(RawButton button)
         {
             if (this.IsOnHeadset())
             {
-                return OVRInput.GetDown(button);
+                return GetDown(button);
             }
             else
             {
@@ -334,19 +373,14 @@ namespace MyUtil
                 {
                     return false;
                 }
-                if (!this.buttonMap.ContainsKey(button))
-                {
-                    Debug.LogWarning($"MyController.buttonMap does not contain the key {button}");
-                    return false;
-                }
-                return Input.GetKeyDown(this.buttonMap[button]);
+                return this.buttonMap.GetDown(button);
             }
         }
-        public bool GetButtonUp(OVRInput.RawButton button)
+        public bool GetButtonUp(RawButton button)
         {
             if (this.IsOnHeadset())
             {
-                return OVRInput.GetUp(button);
+                return GetUp(button);
             }
             else
             {
@@ -354,12 +388,7 @@ namespace MyUtil
                 {
                     return false;
                 }
-                if (!this.buttonMap.ContainsKey(button))
-                {
-                    Debug.LogWarning($"MyController.buttonMap does not contain the key {button}");
-                    return false;
-                }
-                return Input.GetKeyUp(this.buttonMap[button]);
+                return this.buttonMap.GetUp(button);
             }
         }
     }
